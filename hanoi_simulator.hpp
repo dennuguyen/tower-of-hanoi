@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <concepts>
 #include <experimental/iterator>
 #include <iostream>
 #include <stdexcept>
@@ -52,6 +53,11 @@ class hanoi_simulator {
         *from_disc = to_peg;
 
         return true;
+    }
+
+    template <std::integral T>
+    explicit operator std::vector<T>() const noexcept {
+        return std::vector<T>(pegs.begin(), pegs.end());
     }
 
     friend auto operator<<(std::ostream& os, hanoi_simulator const& hs) noexcept -> std::ostream& {
