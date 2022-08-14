@@ -7,8 +7,7 @@
 
 class hanoi_simulator {
    public:
-    explicit hanoi_simulator(std::vector<int> initial_state, int num_pegs) : pegs(initial_state), num_pegs(num_pegs) {
-    }
+    explicit hanoi_simulator(std::vector<int> initial_state, int num_pegs) : pegs(initial_state), num_pegs(num_pegs) {}
 
     // Moves the disc at the from peg to the to peg.
     // @param from The peg to move a disc from.
@@ -21,18 +20,19 @@ class hanoi_simulator {
             return false;
         }
 
-        // Find disc at from peg.
+        // Find top disc at from peg.
         auto from_disc = std::find(pegs.rbegin(), pegs.rend(), from);
         if (from_disc == pegs.rend()) {
             throw std::logic_error("No disc at peg to move from.");
         }
 
-        // Find disc at to peg.
+        // Find top disc at to peg.
         auto to_disc = std::find(pegs.rbegin(), pegs.rend(), to);
 
-        // Check if move is valid.
-        // Moves are only valid if righter discs on top of any lefter discs.
-        // Lefter discs can move to a peg if no righter discs occupy it.
+        // Moves are only valid if disc to be moved aka from_disc is smaller than to_disc.
+        if (from_disc > to_disc) {
+            throw std::logic_error("Larger disc cannot be moved on top of a smaller disc.");
+        }
 
         // Move disc.
         pegs[*from_disc] = to;
