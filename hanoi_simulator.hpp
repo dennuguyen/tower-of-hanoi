@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <experimental/iterator>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -63,7 +64,7 @@ class hanoi_simulator {
    private:
     auto check_peg_range(unsigned int peg) const -> void {
         if (peg < 1 || peg > num_pegs) {
-            throw std::logic_error("Invalid peg, " + std::to_string(peg) + ", found outside the range [1, " + std::to_string(num_pegs) + "].");
+            throw std::invalid_argument("Invalid peg, " + std::to_string(peg) + ", found outside the range [1, " + std::to_string(num_pegs) + "].");
         }
     }
 
