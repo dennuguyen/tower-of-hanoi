@@ -3,31 +3,44 @@
 #include <algorithm>
 #include <experimental/iterator>
 #include <iostream>
+#include <string>
 #include <vector>
 
 class hanoi_simulator {
    public:
-    explicit hanoi_simulator(std::vector<int> initial_state, int num_pegs) : pegs(initial_state), num_pegs(num_pegs) {}
+    // Initialise the Hanoi simulator with an initial state.
+    // @param initial_state The initial peg state where initial_state[disc] = peg.
+    // @param num_pegs Maximum number of pegs.
+    // @throw If any discs have an invalid peg value i.e. outside the range [1, num_pegs].
+    explicit hanoi_simulator(std::vector<int> const& pegs, int const& num_pegs) : pegs(pegs), num_pegs(num_pegs) {
+        std::for_each(pegs.begin(), pegs.end(), [*this](auto const& i) {
+            check_peg_range(i);
+        });
+    }
 
-    // Moves the disc at the from peg to the to peg.
-    // @param from The peg to move a disc from.
-    // @param to The peg to move a disc to.
+    // Moves the disc at the from_peg peg to the to peg.
+    // @param from_peg The peg to move a disc from.
+    // @param to_peg The peg to move a disc to.
     // @return True if the disc is moved and false otherwise.
-    // @throw If no disc exists at the from peg.
+    // @throw If no disc exists at the from_peg peg.
     // @throw If the move is illegal.
-    auto move(int from, int to) -> bool {
-        if (from == to) {
+    // @throw If from_peg or to_peg is outside the range [1, num_pegs].
+    auto move(int from_peg, int to_peg) -> bool {
+        check_peg_range(from_peg);
+        check_peg_range(to_peg);
+
+        if (from_peg == to_peg) {
             return false;
         }
 
-        // Find top disc at from peg.
-        auto from_disc = std::find(pegs.rbegin(), pegs.rend(), from);
+        // Find top disc at from_peg.
+        auto from_disc = std::find(pegs.rbegin(), pegs.rend(), from_peg);
         if (from_disc == pegs.rend()) {
             throw std::logic_error("No disc at peg to move from.");
         }
 
-        // Find top disc at to peg.
-        auto to_disc = std::find(pegs.rbegin(), pegs.rend(), to);
+        // Find top disc at to_peg.
+        auto to_disc = std::find(pegs.rbegin(), pegs.rend(), to_peg);
 
         // Moves are only valid if disc to be moved aka from_disc is smaller than to_disc.
         if (from_disc > to_disc) {
@@ -35,7 +48,7 @@ class hanoi_simulator {
         }
 
         // Move disc.
-        pegs[*from_disc] = to;
+        *from_disc = to_peg;
 
         return true;
     }
@@ -48,6 +61,12 @@ class hanoi_simulator {
     }
 
    private:
+    auto check_peg_range(int peg) const -> void {
+        if (peg < 1 || peg > num_pegs) {
+            throw std::logic_error("Invalid peg, " + std::to_string(peg) + ", found outside the range [1, " + std::to_string(num_pegs) + "].");
+        }
+    }
+
     std::vector<int> pegs;
-    int num_pegs;
+    const int num_pegs;
 };
