@@ -39,11 +39,21 @@ TEST_CASE("Moving discs.") {
     }
 
     SUBCASE("Moving from peg with no discs should throw.") {
+        auto hs = hanoi_simulator({1, 1, 3}, 4);
+        CHECK_THROWS_AS(hs.move(2, 1), std::logic_error);
+        CHECK_THROWS_AS(hs.move(4, 3), std::logic_error);
     }
 
     SUBCASE("Moving larger disc on top of smaller disc should throw.") {
+        auto hs = hanoi_simulator({1, 2, 3}, 3);
+        CHECK_THROWS_AS(hs.move(1, 2), std::logic_error);
+        CHECK_THROWS_AS(hs.move(1, 3), std::logic_error);
     }
 
     SUBCASE("Moving disc to itself should return false.") {
+        auto hs = hanoi_simulator({1, 2, 3}, 3);
+        CHECK(hs.move(1, 1) == false);
+        CHECK(hs.move(2, 2) == false);
+        CHECK(hs.move(3, 3) == false);
     }
 }
