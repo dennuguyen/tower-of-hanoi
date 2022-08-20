@@ -8,13 +8,14 @@
 #include <string>
 #include <vector>
 
+template <std::integral T>
 class hanoi_simulator {
    public:
     // Initialise the Hanoi simulator with an initial state.
     // @param initial_state The initial peg state where initial_state[disc] = peg.
     // @param num_pegs Maximum number of pegs.
     // @throw If any discs have an invalid peg value i.e. outside the range [1, num_pegs].
-    explicit hanoi_simulator(std::vector<unsigned int> const& pegs, unsigned int const& num_pegs) : pegs(pegs), num_pegs(num_pegs) {
+    explicit hanoi_simulator(std::vector<T> const& pegs, T const& num_pegs) : pegs(pegs), num_pegs(num_pegs) {
         std::for_each(pegs.begin(), pegs.end(), [*this](auto const& i) {
             check_peg_range(i);
         });
@@ -27,7 +28,7 @@ class hanoi_simulator {
     // @throw If no disc exists at the from_peg peg.
     // @throw If the move is illegal.
     // @throw If from_peg or to_peg is outside the range [1, num_pegs].
-    auto move(unsigned int from_peg, unsigned int to_peg) -> bool {
+    auto move(T from_peg, T to_peg) -> bool {
         check_peg_range(from_peg);
         check_peg_range(to_peg);
 
@@ -55,7 +56,6 @@ class hanoi_simulator {
         return true;
     }
 
-    template <std::integral T>
     explicit operator std::vector<T>() const noexcept {
         return std::vector<T>(pegs.begin(), pegs.end());
     }
@@ -68,12 +68,12 @@ class hanoi_simulator {
     }
 
    private:
-    auto check_peg_range(unsigned int peg) const -> void {
+    auto check_peg_range(T peg) const -> void {
         if (peg < 1 || peg > num_pegs) {
             throw std::invalid_argument("Invalid peg, " + std::to_string(peg) + ", found outside the range [1, " + std::to_string(num_pegs) + "].");
         }
     }
 
-    std::vector<unsigned int> pegs;
-    const unsigned int num_pegs;
+    std::vector<T> pegs;
+    const T num_pegs;
 };
