@@ -89,6 +89,11 @@ TEST_CASE("4 Pegs.") {
         final = std::vector<int>({4, 1, 2});
     }
 
+    SUBCASE("[1, 1, 1, 1] -> [1, 1, 2, 1]") {
+        initial = std::vector<int>({1, 1, 1, 1});
+        final = std::vector<int>({1, 1, 2, 1});
+    }
+
     SUBCASE("[1, 1, 1, 1, 1] -> [3, 3, 3, 3, 3]") {
         initial = std::vector<int>({1, 1, 1, 1, 1});
         final = std::vector<int>({3, 3, 3, 3, 3});
