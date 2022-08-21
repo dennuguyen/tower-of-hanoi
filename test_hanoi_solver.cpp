@@ -68,7 +68,7 @@ TEST_SUITE("4 Pegs.") {
         auto initial = std::vector<int>({1, 1, 1, 1, 1});
         auto final = std::vector<int>({3, 3, 3, 3, 3});
 
-        reves(initial.size(), 1, 2, 3, 4);
+        reves(initial.size(), 1, 3, 2, 4);
         auto hs = hanoi_simulator(initial, num_pegs);
         for (auto const& i : moves) {
             hs.move(i.first, i.second);
@@ -87,7 +87,7 @@ TEST_SUITE("4 Pegs.") {
         auto initial = std::vector<int>({1, 1, 1, 1, 1, 1, 1});
         auto final = std::vector<int>({2, 2, 2, 2, 2, 2, 2});
 
-        reves(initial.size(), 1, 3, 2, 4);
+        reves(initial.size(), 1, 2, 3, 4);
         auto hs = hanoi_simulator(initial, num_pegs);
         for (auto const& i : moves) {
             hs.move(i.first, i.second);
