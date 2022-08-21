@@ -7,39 +7,38 @@
 #include <utility>
 #include <vector>
 
-template <typename T>
-auto operator<<(std::ostream& os, std::vector<T> const& v) -> std::ostream& {
+template <template <typename> typename Cont, typename T>
+auto operator<<(std::ostream& os, Cont<T> const& cont) -> std::ostream& {
     os << "[";
-    std::copy(v.begin(), v.end(), std::experimental::make_ostream_joiner(os, ", "));
+    std::copy(cont.begin(), cont.end(), std::experimental::make_ostream_joiner(os, ", "));
     os << "]";
     return os;
 }
 
 std::vector<std::pair<int, int>> moves;
 
-auto hanoi(std::vector<int> from, std::vector<int> to) {
+auto hanoi(std::vector<int> from, std::vector<int> to, std::set<int> pegs = {1, 2, 3}) {
     if (from.empty()) {
         // Base case after placing all discs in their rightful positions.
         return;
     } else if (from.at(0) == to.at(0)) {
         // Base case for placing the largest disc at its rightful position.
-        hanoi({from.begin() + 1, from.end()}, {to.begin() + 1, to.end()});
+        hanoi({from.begin() + 1, from.end()}, {to.begin() + 1, to.end()}, pegs);
     } else {
         // Determine which pegs are free i.e. not from and to pegs.
-        auto pegs = std::set<int>({1, 2, 3});
-        pegs.erase(from.at(0));
-        pegs.erase(to.at(0));
-        auto free = std::vector<int>(from.size() - 1, *pegs.begin());
+        auto temp = pegs;
+        temp.erase(from.at(0));
+        temp.erase(to.at(0));
+        auto free = std::vector<int>(from.size() - 1, *temp.begin());
 
         // Keep exploring subsolutions.
-        hanoi({from.begin() + 1, from.end()}, free);
+        hanoi({from.begin() + 1, from.end()}, free, pegs);
         moves.emplace_back(std::make_pair(from.at(0), to.at(0)));
-        hanoi(free, {to.begin() + 1, to.end()});
+        hanoi(free, {to.begin() + 1, to.end()}, pegs);
     }
 }
 
-/////////////// EVERYTHING BELOW WORKS FOR REVE'S with 4 PEGS AND N DISCS.
-
+// Classic Tower of Hanoi 3 peg recursive solution.
 // auto hanoi(int num_discs, int disc, int from, int to, int free) {
 //     if (num_discs == 0) {
 //         return;
@@ -49,6 +48,7 @@ auto hanoi(std::vector<int> from, std::vector<int> to) {
 //     hanoi(num_discs - 1, disc, free, to, from);
 // }
 
+// Recursive Frame-Stewart algorithm.
 // auto reves(int num_discs, int from, int to, int free1, int free2) {
 //     int partition_disc = num_discs + 1 - std::round(std::sqrt(2 * num_discs + 1));
 //     if (partition_disc == 0) {
