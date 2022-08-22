@@ -18,34 +18,31 @@ auto operator<<(std::ostream& os, Cont<T> const& cont) -> std::ostream& {
 std::vector<std::pair<int, int>> moves;
 
 auto hanoi(std::vector<int> from, std::vector<int> to, std::set<int> pegs = {1, 2, 3}) {
+    // Base case after placing all discs in their rightful positions.
     if (from.empty()) {
-        // Base case after placing all discs in their rightful positions.
         return;
-    } else if (from.at(0) == to.at(0)) {
-        // Base case for placing the largest disc at its rightful position.
-        hanoi({from.begin() + 1, from.end()}, {to.begin() + 1, to.end()}, pegs);
-    } else {
-        // Determine which pegs are free i.e. not from and to pegs.
-        auto temp = pegs;
-        temp.erase(from.at(0));
-        temp.erase(to.at(0));
-        auto free = std::vector<int>(from.size() - 1, *temp.begin());
-
-        // Keep exploring subsolutions.
-        hanoi({from.begin() + 1, from.end()}, free, pegs);
-        moves.emplace_back(std::make_pair(from.at(0), to.at(0)));
-        hanoi(free, {to.begin() + 1, to.end()}, pegs);
     }
+
+    // Determine which pegs are free i.e. not from and to pegs.
+    auto temp = pegs;
+    temp.erase(from.at(0));
+    temp.erase(to.at(0));
+    auto free = std::vector<int>(from.size() - 1, *temp.begin());
+
+    // Keep exploring subsolutions.
+    hanoi({from.begin() + 1, from.end()}, free, pegs);
+    moves.emplace_back(std::make_pair(from.at(0), to.at(0)));
+    hanoi(free, {to.begin() + 1, to.end()}, pegs);
 }
 
 // Classic Tower of Hanoi 3 peg recursive solution.
-// auto hanoi(int num_discs, int disc, int from, int to, int free) {
+// auto hanoi(int num_discs, int from, int to, int free) {
 //     if (num_discs == 0) {
 //         return;
 //     }
-//     hanoi(num_discs - 1, disc, from, free, to);
+//     hanoi(num_discs - 1, from, free, to);
 //     moves.emplace_back(std::make_pair(from, to));
-//     hanoi(num_discs - 1, disc, free, to, from);
+//     hanoi(num_discs - 1, free, to, from);
 // }
 
 // Recursive Frame-Stewart algorithm.
@@ -56,6 +53,6 @@ auto hanoi(std::vector<int> from, std::vector<int> to, std::set<int> pegs = {1, 
 //         return;
 //     }
 //     reves(partition_disc, from, free1, to, free2);
-//     hanoi(num_discs - partition_disc, partition_disc, from, to, free2);
+//     hanoi(num_discs - partition_disc, from, to, free2);
 //     reves(partition_disc, free1, to, from, free2);
 // }
